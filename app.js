@@ -11,7 +11,9 @@ const auth = require('./middlewares/auth');
 // что бы считывала инфу с .env файла
 require('dotenv').config();
 
-const { routerUsers, routerCards } = require('./routes');
+const {
+  addArticles, deleteArticles, getArticles, getUsersMe,
+} = require('./routes');
 
 const app = express();
 const { PORT = 3001 } = process.env;
@@ -40,13 +42,14 @@ app.use(cors());
 
 // app.use(requestLogger); // подключаем логгер запросов, до обработчиков подключать
 
-app.use('/', routerUsers);
-
 // проверка пользователя на авторизацию (все что ниже, могут видеть только авторизованные)
 app.use(auth);
 
 // роуты, которым авторизация нужна
-app.use('/cards', auth, routerCards);
+app.use('/', addArticles);
+app.use('/', deleteArticles);
+app.use('/', getArticles);
+app.use('/', getUsersMe);
 
 app.use('/', () => {
   throw new NotFoundError('Запрашиваемый ресурс не найден');
