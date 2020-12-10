@@ -4,7 +4,7 @@ const bodyParser = require('body-parser');
 const rateLimit = require('express-rate-limit');
 const { errors } = require('celebrate');
 const cors = require('cors');
-// const { requestLogger, errorLogger } = require('./middlewares/logger');
+const { requestLogger, errorLogger } = require('./middlewares/logger');
 const { NotFoundError } = require('./helpers/errors/index');
 const auth = require('./middlewares/auth');
 
@@ -12,7 +12,7 @@ const auth = require('./middlewares/auth');
 require('dotenv').config();
 
 const {
-  addArticles, deleteArticles, getArticles, getUsersMe,
+  addArticles, deleteArticles, getArticles, getUsersMe, signup, signin,
 } = require('./routes');
 
 const app = express();
@@ -22,12 +22,12 @@ const limiter = rateLimit({
   max: 100,
 });
 
-// mongoose.connect('mongodb://localhost:27017/mestodb', {
-//   useNewUrlParser: true,
-//   useCreateIndex: true,
-//   useFindAndModify: false,
-//   useUnifiedTopology: true,
-// });
+mongoose.connect('mongodb://localhost:27017/articlesUser', {
+  useNewUrlParser: true,
+  useCreateIndex: true,
+  useFindAndModify: false,
+  useUnifiedTopology: true,
+});
 
 app.use(limiter);
 app.use(bodyParser.json());
@@ -40,8 +40,10 @@ app.use((req, res, next) => {
 });
 app.use(cors());
 
-// app.use(requestLogger); // подключаем логгер запросов, до обработчиков подключать
+app.use(requestLogger); // подключаем логгер запросов, до обработчиков подключать
 
+app.use('/', signup);
+app.use('/', signin);
 // проверка пользователя на авторизацию (все что ниже, могут видеть только авторизованные)
 app.use(auth);
 
@@ -56,7 +58,7 @@ app.use('/', () => {
 });
 
 // подключаем логгер ошибок. После обработчиков роутов и до обработчиков ошибок
-// app.use(errorLogger);
+app.use(errorLogger);
 
 // обработчик ошибок celebrate
 app.use(errors());
