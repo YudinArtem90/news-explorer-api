@@ -1,7 +1,7 @@
 const express = require('express');
 
 const router = express.Router();
-const addArticles = require('../controllers/add-articles');
+const { addArticles } = require('../controllers/add-articles');
 const { regExpUrl } = require('../helpers/constants/index');
 // eslint-disable-next-line import/order
 const { celebrate, Joi } = require('celebrate');
@@ -11,34 +11,35 @@ router.post('/articles', celebrate({
     keyword: Joi
       .string()
       .trim()
-      .required()
       .min(2)
-      .max(30),
+      .max(30)
+      .required(),
     title: Joi
       .string()
-      .required()
-      .trim(),
+      .trim()
+      .required(),
     text: Joi
       .string()
-      .required()
-      .trim(),
+      .trim()
+      .required(),
     date: Joi
       .date()
-      .required()
-      .trim(),
+      .required(),
     source: Joi
       .string()
-      .required()
-      .trim(),
+      .trim()
+      .required(),
     link: Joi
       .string()
-      .required()
       .trim()
+      .required()
       .pattern(new RegExp(regExpUrl)),
     image: Joi
       .string()
-      .required()
       .trim()
+      .required()
       .pattern(new RegExp(regExpUrl)),
   }),
 }), addArticles);
+
+module.exports = router;
