@@ -7,9 +7,9 @@ const { deleteArticles } = require('../controllers/delete-articles');
 const { celebrate, Joi } = require('celebrate');
 const { regExpObjectId } = require('../helpers/constants/index');
 
-router.get('/articles/:articleId', celebrate({
+router.delete('/articles/:articleId', celebrate({
   params: Joi.object().keys({
-    cardId: Joi.string().trim().required().pattern(new RegExp(regExpObjectId)),
+    articleId: Joi.string().trim().required().pattern(new RegExp(regExpObjectId)),
   }),
 }), deleteArticles);
 
