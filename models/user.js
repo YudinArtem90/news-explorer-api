@@ -1,8 +1,8 @@
 const mongoose = require('mongoose');
 const bcrypt = require('bcryptjs');
-// const { Unauthorized, BadRequest } = require('../helpers/errors');
-// const { validationUrl, validationEmail } = require('../helpers/validation');
-// const checkErrors = require('../helpers/checkErrors');
+const { Unauthorized, BadRequest } = require('../helpers/errors');
+const { validationUrl, validationEmail } = require('../helpers/validation');
+const checkErrors = require('../helpers/checkErrors');
 
 const userSchema = new mongoose.Schema({
   name: {
@@ -17,7 +17,7 @@ const userSchema = new mongoose.Schema({
     unique: true,
     validate: {
       validator(email) {
-        // return validationEmail(email);
+        return validationEmail(email);
       },
       message: 'Ошибка валидации email в userSchema',
     },
@@ -45,21 +45,21 @@ const userSchema = new mongoose.Schema({
 //       }));
 // };
 
-// userSchema.pre('save', function (next) {
-//   if (!this.isModified('password')) {
-//     next();
-//   }
+userSchema.pre('save', function (next) {
+  if (!this.isModified('password')) {
+    next();
+  }
 
-//   if (this.password.length < 8) {
-//     next(new BadRequest('Пароль не может быть менее 8 символов.'));
-//   }
+  if (this.password.length < 8) {
+    next(new BadRequest('Пароль не может быть менее 8 символов.'));
+  }
 
-//   bcrypt.hash(this.password, 10)
-//     .then((hash) => {
-//       this.password = hash;
-//       next();
-//     })
-//     .catch((err) => next(checkErrors(err, next)));
-// });
+  bcrypt.hash(this.password, 10)
+    .then((hash) => {
+      this.password = hash;
+      next();
+    })
+    .catch((err) => next(checkErrors(err, next)));
+});
 
 module.exports = mongoose.model('user', userSchema);

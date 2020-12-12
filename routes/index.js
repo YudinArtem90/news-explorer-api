@@ -1,15 +1,15 @@
-const addArticles = require('./add-articles');
-const deleteArticles = require('./delete-articles');
-const getArticles = require('./get-articles');
-const getUsersMe = require('./get-users-me');
-const signup = require('./signup');
-const signin = require('./signin');
+const routerAddArticles = require('./add-articles');
+const routerDeleteArticles = require('./delete-articles');
+const routerGetArticles = require('./get-articles');
+const routerGetUsersMe = require('./get-users-me');
+const routerSignup = require('./signup');
+const routerSignin = require('./signin');
 
 module.exports = {
-  addArticles,
-  deleteArticles,
-  getArticles,
-  getUsersMe,
-  signup,
-  signin,
+  routerAddArticles,
+  routerDeleteArticles,
+  routerGetArticles,
+  routerGetUsersMe,
+  routerSignup,
+  routerSignin,
 };

@@ -12,15 +12,20 @@ const auth = require('./middlewares/auth');
 require('dotenv').config();
 
 const {
-  addArticles, deleteArticles, getArticles, getUsersMe, signup, signin,
+  routerAddArticles,
+  routerDeleteArticles,
+  routerGetArticles,
+  routerGetUsersMe,
+  routerSignup,
+  routerSignin,
 } = require('./routes');
 
 const app = express();
 const { PORT = 3001 } = process.env;
-const limiter = rateLimit({
-  windowMs: 15 * 60 * 1000,
-  max: 100,
-});
+// const limiter = rateLimit({
+//   windowMs: 15 * 60 * 1000,
+//   max: 100,
+// });
 
 mongoose.connect('mongodb://localhost:27017/articlesUser', {
   useNewUrlParser: true,
@@ -29,12 +34,13 @@ mongoose.connect('mongodb://localhost:27017/articlesUser', {
   useUnifiedTopology: true,
 });
 
-app.use(limiter);
+// app.use(limiter);
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
 // что бы не ругался на CORS
 app.use((req, res, next) => {
+  // console.log('req', req);
   res.header('Access-Control-Max-Age', '86400');
   next();
 });
@@ -42,16 +48,17 @@ app.use(cors());
 
 app.use(requestLogger); // подключаем логгер запросов, до обработчиков подключать
 
-app.use('/', signup);
-app.use('/', signin);
+app.use('/signup', routerSignup);
+app.use('/signin', routerSignin);
+
 // проверка пользователя на авторизацию (все что ниже, могут видеть только авторизованные)
 app.use(auth);
 
 // роуты, которым авторизация нужна
-app.use('/', addArticles);
-app.use('/', deleteArticles);
-app.use('/', getArticles);
-app.use('/', getUsersMe);
+app.use('/', routerAddArticles);
+app.use('/', routerDeleteArticles);
+app.use('/', routerGetArticles);
+app.use('/', routerGetUsersMe);
 
 app.use('/', () => {
   throw new NotFoundError('Запрашиваемый ресурс не найден');
