@@ -1,12 +1,13 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
-const rateLimit = require('express-rate-limit');
 const { errors } = require('celebrate');
 const cors = require('cors');
 const { requestLogger, errorLogger } = require('./middlewares/logger');
 const { NotFoundError } = require('./helpers/errors/index');
 const auth = require('./middlewares/auth');
+const limiter = require('./middlewares/limiter');
+const { PORT } = require('./helpers/constants');
 
 // что бы считывала инфу с .env файла
 require('dotenv').config();
@@ -21,11 +22,6 @@ const {
 } = require('./routes');
 
 const app = express();
-const { PORT = 3001 } = process.env;
-const limiter = rateLimit({
-  windowMs: 15 * 60 * 1000,
-  max: 100,
-});
 
 mongoose.connect('mongodb://localhost:27017/articlesUser', {
   useNewUrlParser: true,
