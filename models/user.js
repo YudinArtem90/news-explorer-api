@@ -31,19 +31,19 @@ const userSchema = new mongoose.Schema({
 });
 
 // eslint-disable-next-line func-names
-// userSchema.statics.findUserByCredentials = function (email, password, next) {
-//   return this.findOne({ email })
-//     .orFail(() => new Unauthorized('Неправильные почта или пароль'))
-//     .select('+password')
-//     .then((user) => bcrypt.compare(password, user.password)
-//       .then((matched) => {
-//         if (!matched) {
-//           throw new Unauthorized('Неправильные почта или пароль');
-//         }
+userSchema.statics.findUserByCredentials = function (email, password, next) {
+  return this.findOne({ email })
+    .orFail(() => new Unauthorized('Неправильные почта или пароль'))
+    .select('+password')
+    .then((user) => bcrypt.compare(password, user.password)
+      .then((matched) => {
+        if (!matched) {
+          throw new Unauthorized('Неправильные почта или пароль');
+        }
 
-//         return user;
-//       }));
-// };
+        return user;
+      }));
+};
 
 userSchema.pre('save', function (next) {
   if (!this.isModified('password')) {

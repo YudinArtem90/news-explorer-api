@@ -1,12 +1,23 @@
 const path = require('path');
-// const Card = require('../models/card');
-// const checkErrors = require('../helpers/checkErrors');
-
-// const { getData } = require(path.join(__dirname, '..', 'helpers', 'getData'));
-// const { NotFoundError, Forbidden } = require('../helpers/errors');
+const jwt = require('jsonwebtoken');
+const User = require('../models/user');
+const checkErrors = require('../helpers/checkErrors');
+const getJwtSecret = require('../helpers/getJwtSecret');
 
 module.exports.signin = (req, res, next) => {
-  // Card.find({})
-  //   .then((cards) => getData(res, cards))
-  //   .catch((err) => next(checkErrors(err, next)));
+  const { email, password } = req.body;
+
+  return User.findUserByCredentials(email, password)
+    .then((user) => {
+    // аутентификация успешна! пользователь в переменной user
+    // add token
+      const token = jwt.sign(
+        { _id: user._id },
+        getJwtSecret(),
+        { expiresIn: '7d' },
+      );
+
+      res.send({ token });
+    })
+    .catch((err) => next(checkErrors(err, next)));
 };
