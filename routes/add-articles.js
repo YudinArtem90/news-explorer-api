@@ -23,7 +23,8 @@ router.post('/articles', celebrate({
       .trim()
       .required(),
     date: Joi
-      .date()
+      .string()
+      .trim()
       .required(),
     source: Joi
       .string()

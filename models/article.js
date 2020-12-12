@@ -1,8 +1,6 @@
 const mongoose = require('mongoose');
-// const bcrypt = require('bcryptjs');
-// const { Unauthorized, BadRequest } = require('../helpers/errors');
-// const { validationUrl, validationEmail } = require('../helpers/validation');
-// const checkErrors = require('../helpers/checkErrors');
+const { validationUrl, validationEmail } = require('../helpers/validation');
+
 const { Schema } = mongoose;
 const user = require('./user');
 
@@ -20,8 +18,7 @@ const userSchema = new mongoose.Schema({
     required: true,
   },
   date: {
-    type: Date,
-    default: Date.now,
+    type: String,
     required: true,
   },
   source: {
@@ -33,19 +30,19 @@ const userSchema = new mongoose.Schema({
     required: true,
     validate: {
       validator(url) {
-        // return validationUrl(url);
+        return validationUrl(url);
       },
-      message: 'Ошибка валидации url в userSchema',
+      message: 'Ошибка валидации link в userSchema',
     },
   },
   image: {
     type: String,
     required: true,
     validate: {
-      validator(email) {
-        // return validationEmail(email);
+      validator(url) {
+        return validationUrl(url);
       },
-      message: 'Ошибка валидации email в userSchema',
+      message: 'Ошибка валидации image в userSchema',
     },
   },
   owner: {
@@ -55,3 +52,5 @@ const userSchema = new mongoose.Schema({
     require: true,
   },
 });
+
+module.exports = mongoose.model('article', userSchema);

@@ -1,12 +1,14 @@
 const path = require('path');
-// const Card = require('../models/card');
-// const checkErrors = require('../helpers/checkErrors');
+const Article = require('../models/article');
+const checkErrors = require('../helpers/checkErrors');
 
-// const { getData } = require(path.join(__dirname, '..', 'helpers', 'getData'));
-// const { NotFoundError, Forbidden } = require('../helpers/errors');
+const { getData } = require(path.join(__dirname, '..', 'helpers', 'getData'));
 
 module.exports.addArticles = (req, res, next) => {
-  // Card.find({})
-  //   .then((cards) => getData(res, cards))
-  //   .catch((err) => next(checkErrors(err, next)));
+  req.body.owner = req.user._id;
+
+  Article
+    .create(req.body)
+    .then(() => getData(res, { message: 'Статья создана' }))
+    .catch((err) => next(checkErrors(err, next)));
 };
