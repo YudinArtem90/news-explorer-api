@@ -3,7 +3,7 @@ const User = require('../models/user');
 const checkErrors = require('../helpers/checkErrors');
 
 const { getData } = require(path.join(__dirname, '..', 'helpers', 'getData'));
-const { NotFoundError, Forbidden } = require('../helpers/errors');
+const { NotFoundError } = require('../helpers/errors');
 
 module.exports.getUsersMe = (req, res, next) => {
   User

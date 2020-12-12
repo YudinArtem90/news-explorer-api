@@ -22,10 +22,10 @@ const {
 
 const app = express();
 const { PORT = 3001 } = process.env;
-// const limiter = rateLimit({
-//   windowMs: 15 * 60 * 1000,
-//   max: 100,
-// });
+const limiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  max: 100,
+});
 
 mongoose.connect('mongodb://localhost:27017/articlesUser', {
   useNewUrlParser: true,
@@ -34,13 +34,12 @@ mongoose.connect('mongodb://localhost:27017/articlesUser', {
   useUnifiedTopology: true,
 });
 
-// app.use(limiter);
+app.use(limiter);
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
 // что бы не ругался на CORS
 app.use((req, res, next) => {
-  // console.log('req', req);
   res.header('Access-Control-Max-Age', '86400');
   next();
 });
@@ -72,7 +71,6 @@ app.use(errors());
 
 // централизованная обработка ошибок
 app.use((err, req, res, next) => {
-  console.log('err', err);
   if (err.statusCode) {
     res
       .status(err.statusCode)

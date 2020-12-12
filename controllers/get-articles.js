@@ -6,6 +6,6 @@ const { getData } = require(path.join(__dirname, '..', 'helpers', 'getData'));
 
 module.exports.getArticles = (req, res, next) => {
   Article.find({ owner: req.user._id })
-    .then((cards) => getData(res, cards))
+    .then((article) => getData(res, article))
     .catch((err) => next(checkErrors(err, next)));
 };

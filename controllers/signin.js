@@ -1,4 +1,3 @@
-const path = require('path');
 const jwt = require('jsonwebtoken');
 const User = require('../models/user');
 const checkErrors = require('../helpers/checkErrors');
@@ -9,8 +8,6 @@ module.exports.signin = (req, res, next) => {
 
   return User.findUserByCredentials(email, password)
     .then((user) => {
-    // аутентификация успешна! пользователь в переменной user
-    // add token
       const token = jwt.sign(
         { _id: user._id },
         getJwtSecret(),
